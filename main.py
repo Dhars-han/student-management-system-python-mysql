@@ -66,6 +66,57 @@ def update_student():
     cursor.close()
     conn.close()
 
+def search_student():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    name = input("Enter student name to search: ")
+
+    query = "SELECT * FROM students WHERE name LIKE %s"
+    cursor.execute(query, ('%' + name + '%',))
+
+    results = cursor.fetchall()
+
+    if results:
+        for row in results:
+            print(row)
+    else:
+        print("No student found")
+
+    cursor.close()
+    conn.close()
+
+def show_topper():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM students ORDER BY marks DESC LIMIT 1"
+    cursor.execute(query)
+
+    result = cursor.fetchone()
+
+    if result:
+        print("Topper:", result)
+    else:
+        print("No data available")
+
+    cursor.close()
+    conn.close()
+
+def average_marks():
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    query = "SELECT AVG(marks) FROM students"
+    cursor.execute(query)
+
+    result = cursor.fetchone()
+
+    print("Average Marks:", result[0])
+
+    cursor.close()
+    conn.close()
+
 
 def menu():
     print("\n--- Student Management System ---")
@@ -73,7 +124,10 @@ def menu():
     print("2. View Students")
     print("3. Delete Student")
     print("4. Update Student")
-    print("5. Exit")
+    print("5. Search Student")
+    print("6. Show Topper")
+    print("7. Average Marks")
+    print("8. Exit")
 
 
 def main():
@@ -90,6 +144,12 @@ def main():
         elif choice == "4":
             update_student()
         elif choice == "5":
+            search_student()
+        elif choice == "6":
+            show_topper()
+        elif choice == "7":
+            average_marks()
+        elif choice == "8":
             break
         else:
             print("Invalid choice")
